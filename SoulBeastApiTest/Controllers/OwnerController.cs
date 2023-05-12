@@ -44,6 +44,41 @@ namespace SoulBeastApiTest.Controllers
             return Ok(owners);
         }
 
+        //Método Get por Owner Id mostrando dados e seus SoulBeasts
+        [HttpGet]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> GetOwner([FromRoute] Guid id)
+        {
+            var owner = await _dbContext.Owners.FindAsync(id);
+
+            if (owner != null)
+            {
+                var ownerselect = _dbContext.Owners
+                 .Select(owner => new OwnerDto
+                 {
+                     Id = owner.Id,
+                     Name = owner.Name,
+                     Age = owner.Age,
+                     HomeTown = owner.HomeTown,
+                     Soulbeasts = owner.Soulbeasts.
+                         Select(soulbeast => new SoulbeastDto
+                         {
+                             Id = soulbeast.Id,
+                             Name = soulbeast.Name,
+                             Level = soulbeast.Level,
+                             Element = soulbeast.Element
+                         })
+                         .ToList()
+                 }).Where(s => s.Id == id).FirstOrDefault();
+
+                return Ok(ownerselect);
+            }
+
+            return NotFound();
+        }
+
+
+
         //Método Post criando um Owner
         [HttpPost]
         public async Task<IActionResult> AddOwner(OwnerDto ownerCreate)
@@ -58,6 +93,45 @@ namespace SoulBeastApiTest.Controllers
             await _dbContext.Owners.AddAsync(owner);
             await _dbContext.SaveChangesAsync();
             return Ok(owner);
+        }
+
+        //Método Put Update um Owner por id
+        [HttpPut]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> UpdateOwner([FromRoute] Guid id, OwnerDto ownerUpdate)
+        {
+            var owner = await _dbContext.Owners.FindAsync(id);
+
+            if (owner != null)
+            {
+                owner.Name = ownerUpdate.Name;
+                owner.Age = ownerUpdate.Age;
+                owner.HomeTown = ownerUpdate.HomeTown;
+
+                await _dbContext.SaveChangesAsync();
+
+                return Ok(owner);
+            }
+
+            return NotFound();
+        }
+
+        //Método Delete para deletar Owner por Id
+        [HttpDelete]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> DeleteOwner([FromRoute] Guid id)
+        {
+            var owner = await _dbContext.Owners.FindAsync(id);
+            
+            if (owner != null)
+            {
+                _dbContext.Remove(owner);
+                await _dbContext.SaveChangesAsync();
+
+                return Ok(owner);
+            }
+
+            return NotFound();
         }
     }
 }
