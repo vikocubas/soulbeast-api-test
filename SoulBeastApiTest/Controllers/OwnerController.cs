@@ -16,7 +16,7 @@ namespace SoulBeastApiTest.Controllers
             _dbContext = dbContext;
         }
 
-        //Método Get pegando todos os Owner e selecionando seus dados e seus Soulbeasts.
+        //Método Get pegando todos os Owner e selecionando seus dados, seus Soulbeasts e suas Medalhas.
         [HttpGet]
         public IActionResult GetOwners()
         {
@@ -33,9 +33,18 @@ namespace SoulBeastApiTest.Controllers
                             Id = soulbeast.Id,
                             Name = soulbeast.Name,
                             Level = soulbeast.Level,
-                            Element = soulbeast.Element
+                            Element = soulbeast.Element,
+                            OwnerId = soulbeast.OwnerId
                         })
-                        .ToList()
+                        .ToList(),
+                    Medals = owner.Medals.
+                        Select(medals => new MedalDto
+                        {
+                            Id = medals.Id,
+                            Name = medals.Name,
+                            Dungeon = medals.Dungeon,
+                            OwnerId = medals.OwnerId
+                        }).ToList()
                 })
                 .ToList();
 
@@ -44,7 +53,7 @@ namespace SoulBeastApiTest.Controllers
             return Ok(owners);
         }
 
-        //Método Get por Owner Id mostrando dados e seus SoulBeasts
+        //Método Get por Owner Id mostrando dados, seus SoulBeasts e suas Medalhas.
         [HttpGet]
         [Route("{id:guid}")]
         public async Task<IActionResult> GetOwner([FromRoute] Guid id)
@@ -68,7 +77,15 @@ namespace SoulBeastApiTest.Controllers
                              Level = soulbeast.Level,
                              Element = soulbeast.Element
                          })
-                         .ToList()
+                         .ToList(),
+                    Medals = owner.Medals.
+                        Select(medals => new MedalDto
+                        {
+                            Id = medals.Id,
+                            Name = medals.Name,
+                            Dungeon = medals.Dungeon,
+                            OwnerId = medals.OwnerId
+                        }).ToList()
                  }).Where(s => s.Id == id).FirstOrDefault();
 
                 return Ok(ownerselect);

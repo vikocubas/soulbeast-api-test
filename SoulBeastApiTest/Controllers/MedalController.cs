@@ -73,6 +73,7 @@ namespace SoulBeastApiTest.Controllers
             return NotFound();
         }
 
+        //Método Put adicionando uma Medalha a um Owner Id
         [HttpPut]
         [Route("{id:guid}/putMedal")]
         public async Task<IActionResult> PutMedal([FromRoute] Guid id, MedalDto putMedal)
