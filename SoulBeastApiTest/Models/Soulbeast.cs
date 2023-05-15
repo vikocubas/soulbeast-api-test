@@ -11,5 +11,7 @@
         public Guid OwnerId { get; set; }
         public Owner Owner { get; set; }
 
+        // Relação de 1 SoulBeast pode ter 1 Item ou mais items (Sempre colocar quando criar lista: = new();)
+        public List<Item>? Items { get; set; } = new();
     }
 }

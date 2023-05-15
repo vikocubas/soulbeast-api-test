@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SoulBeastApiTest.Data;
 
@@ -11,9 +12,11 @@ using SoulBeastApiTest.Data;
 namespace SoulBeastApiTest.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230515184636_Update All tables")]
+    partial class UpdateAlltables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,8 +47,6 @@ namespace SoulBeastApiTest.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SoulbeastId");
 
                     b.ToTable("Items");
                 });
@@ -106,6 +107,12 @@ namespace SoulBeastApiTest.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("ItemId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ItemId1")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("Level")
                         .HasColumnType("int");
 
@@ -118,18 +125,11 @@ namespace SoulBeastApiTest.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ItemId1");
+
                     b.HasIndex("OwnerId");
 
                     b.ToTable("Soulbeasts");
-                });
-
-            modelBuilder.Entity("SoulBeastApiTest.Models.Item", b =>
-                {
-                    b.HasOne("SoulBeastApiTest.Models.Soulbeast", "Soulbeast")
-                        .WithMany("Items")
-                        .HasForeignKey("SoulbeastId");
-
-                    b.Navigation("Soulbeast");
                 });
 
             modelBuilder.Entity("SoulBeastApiTest.Models.Medal", b =>
@@ -143,11 +143,17 @@ namespace SoulBeastApiTest.Migrations
 
             modelBuilder.Entity("SoulBeastApiTest.Models.Soulbeast", b =>
                 {
+                    b.HasOne("SoulBeastApiTest.Models.Item", "Item")
+                        .WithMany()
+                        .HasForeignKey("ItemId1");
+
                     b.HasOne("SoulBeastApiTest.Models.Owner", "Owner")
                         .WithMany("Soulbeasts")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Item");
 
                     b.Navigation("Owner");
                 });
@@ -157,11 +163,6 @@ namespace SoulBeastApiTest.Migrations
                     b.Navigation("Medals");
 
                     b.Navigation("Soulbeasts");
-                });
-
-            modelBuilder.Entity("SoulBeastApiTest.Models.Soulbeast", b =>
-                {
-                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

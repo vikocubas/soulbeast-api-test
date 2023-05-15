@@ -34,7 +34,7 @@ namespace SoulBeastApiTest.Controllers
                             Name = soulbeast.Name,
                             Level = soulbeast.Level,
                             Element = soulbeast.Element,
-                            OwnerId = soulbeast.OwnerId
+                            OwnerId = soulbeast.OwnerId,
                         })
                         .ToList(),
                     Medals = owner.Medals.
@@ -44,7 +44,7 @@ namespace SoulBeastApiTest.Controllers
                             Name = medals.Name,
                             Dungeon = medals.Dungeon,
                             OwnerId = medals.OwnerId
-                        }).ToList()
+                        }).ToList(),
                 })
                 .ToList();
 
@@ -86,7 +86,7 @@ namespace SoulBeastApiTest.Controllers
                             Dungeon = medals.Dungeon,
                             OwnerId = medals.OwnerId
                         }).ToList()
-                 }).Where(s => s.Id == id).FirstOrDefault();
+                 }).Where(o => o.Id == id).FirstOrDefault();
 
                 return Ok(ownerselect);
             }

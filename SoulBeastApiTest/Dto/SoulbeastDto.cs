@@ -7,5 +7,6 @@
         public int Level { get; set; }
         public string Element { get; set; }
         public Guid OwnerId { get; set; }
+        public List<ItemDto>? Items { get; set; } = new();
     }
 }

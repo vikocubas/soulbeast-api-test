@@ -16,26 +16,67 @@ namespace SoulBeastApiTest.Controllers
             _dbContext = dbContext;
         }
 
-        //Método Get pegando todos os SoulBeasts
+        //Método Get mostrando todos os SoulBeasts e seus Items
         [HttpGet]
         public IActionResult GetSoulbeasts()
         {
-            return Ok(_dbContext.Soulbeasts.ToList());        
+            var soulbeast = _dbContext.Soulbeasts
+                .Select(soulbeast => new SoulbeastDto
+                {
+                    Id = soulbeast.Id,
+                    Name = soulbeast.Name,
+                    Level = soulbeast.Level,
+                    Element = soulbeast.Element,
+                    OwnerId = soulbeast.OwnerId,
+                    Items = soulbeast.Items.
+                        Select(items => new ItemDto
+                        {
+                            Id = items.Id,
+                            Name = items.Name,
+                            Description = items.Description,
+                            Rarity = items.Rarity,
+                            SoulbeastId = items.SoulbeastId,
+                        }).ToList()
+                })
+                .ToList();
+
+
+
+            return Ok(soulbeast);
         }
 
-        //Método Get por Id Soulbeast
+        //Método Get por SoulBeast Id mostrando dados e seus Items.
         [HttpGet]
         [Route("{id:guid}")]
         public async Task<IActionResult> GetSoulbeast([FromRoute] Guid id)
         {
             var soulbeast = await _dbContext.Soulbeasts.FindAsync(id);
 
-            if(soulbeast == null)
+            if (soulbeast != null)
             {
-                return NotFound();
+                var soulbeastselect = _dbContext.Soulbeasts
+                 .Select(soulbeast => new SoulbeastDto
+                 {
+                     Id = soulbeast.Id,
+                     Name = soulbeast.Name,
+                     Level = soulbeast.Level,
+                     Element = soulbeast.Element,
+                     OwnerId = soulbeast.OwnerId,
+                     Items = soulbeast.Items.
+                        Select(items => new ItemDto
+                        {
+                            Id = items.Id,
+                            Name = items.Name,
+                            Description = items.Description,
+                            Rarity = items.Rarity,
+                            SoulbeastId = items.SoulbeastId,
+                        }).ToList()
+                 }).Where(s => s.Id == id).FirstOrDefault();
+
+                return Ok(soulbeastselect);
             }
 
-            return Ok(soulbeast);
+            return NotFound();
         }
 
         //Método Post criando um SoulBeast
