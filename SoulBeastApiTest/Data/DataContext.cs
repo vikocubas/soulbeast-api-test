@@ -15,5 +15,8 @@ namespace SoulBeastApiTest.Data
         public DbSet<Owner> Owners { get; set; }
         public DbSet<Medal> Medals { get; set; }
         public DbSet<Item> Items { get; set; }
+        public DbSet<Skill> Skills { get; set; }
+        public DbSet<SoulbeastSkill> SoulbeastSkills { get; set; }
+
     }
 }

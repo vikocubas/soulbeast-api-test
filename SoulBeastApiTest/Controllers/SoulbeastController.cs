@@ -93,6 +93,7 @@ namespace SoulBeastApiTest.Controllers
 
             await _dbContext.Soulbeasts.AddAsync(soulbeast);
             await _dbContext.SaveChangesAsync();
+
             return Ok(soulbeast);
             
         }

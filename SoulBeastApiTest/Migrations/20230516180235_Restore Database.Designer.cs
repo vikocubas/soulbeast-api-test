@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SoulBeastApiTest.Data;
 
@@ -11,9 +12,11 @@ using SoulBeastApiTest.Data;
 namespace SoulBeastApiTest.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230516180235_Restore Database")]
+    partial class RestoreDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -96,28 +99,6 @@ namespace SoulBeastApiTest.Migrations
                     b.ToTable("Owners");
                 });
 
-            modelBuilder.Entity("SoulBeastApiTest.Models.Skill", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Level")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Skills");
-                });
-
             modelBuilder.Entity("SoulBeastApiTest.Models.Soulbeast", b =>
                 {
                     b.Property<Guid>("Id")
@@ -143,27 +124,6 @@ namespace SoulBeastApiTest.Migrations
                     b.HasIndex("OwnerId");
 
                     b.ToTable("Soulbeasts");
-                });
-
-            modelBuilder.Entity("SoulBeastApiTest.Models.SoulbeastSkill", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("SkillId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("SoulbeastId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SkillId");
-
-                    b.HasIndex("SoulbeastId");
-
-                    b.ToTable("SoulbeastSkills");
                 });
 
             modelBuilder.Entity("SoulBeastApiTest.Models.Item", b =>
@@ -193,25 +153,6 @@ namespace SoulBeastApiTest.Migrations
                         .IsRequired();
 
                     b.Navigation("Owner");
-                });
-
-            modelBuilder.Entity("SoulBeastApiTest.Models.SoulbeastSkill", b =>
-                {
-                    b.HasOne("SoulBeastApiTest.Models.Skill", "Skill")
-                        .WithMany()
-                        .HasForeignKey("SkillId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SoulBeastApiTest.Models.Soulbeast", "Soulbeast")
-                        .WithMany()
-                        .HasForeignKey("SoulbeastId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Skill");
-
-                    b.Navigation("Soulbeast");
                 });
 
             modelBuilder.Entity("SoulBeastApiTest.Models.Owner", b =>
