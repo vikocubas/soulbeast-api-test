@@ -1,4 +1,6 @@
-﻿namespace SoulBeastApiTest.Dto
+﻿using SoulBeastApiTest.Models;
+
+namespace SoulBeastApiTest.Dto
 {
     public class SkillDto
     {
@@ -6,5 +8,6 @@
         public string Name { get; set; }
         public int Level { get; set; }
         public string Description { get; set; }
+        public Guid? SoulbeastSkillId { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SoulBeastApiTest.Data;
 using SoulBeastApiTest.Dto;
 using SoulBeastApiTest.Models;
@@ -20,7 +21,25 @@ namespace SoulBeastApiTest.Controllers
         [HttpGet]
         public IActionResult GetSoulbeastSkills()
         {
-            return Ok(_dbContext.SoulbeastSkills.ToList());
+            var soulbeastSkills = _dbContext.SoulbeastSkills
+                .Select(soulbeastSkill => new SoulbeastSkillDto
+                {
+                    Id = soulbeastSkill.Id,
+                    SoulbeastId = soulbeastSkill.SoulbeastId,
+                    SkillId = soulbeastSkill.SkillId,
+                    Skills = soulbeastSkill.Skills.
+                        Select(skills => new SkillDto
+                        {
+                            Id = skills.Id,
+                            Name = skills.Name,
+                            Level = skills.Level,
+                            Description = skills.Description,
+                        }).ToList(),
+                })
+                .ToList();
+
+            return Ok(soulbeastSkills);
+
         }
 
         //Método Post criando um SoulbeastSkills
@@ -37,6 +56,24 @@ namespace SoulBeastApiTest.Controllers
             await _dbContext.SaveChangesAsync();
 
             return Ok(soulbeastskill);
+        }
+
+        //Método Delete para deletar um SoulbeastSkills por Id
+        [HttpDelete]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> DeleteSoulbeastSkill([FromRoute] Guid id)
+        {
+            var item = await _dbContext.SoulbeastSkills.FindAsync(id);
+
+            if (item != null)
+            {
+                _dbContext.Remove(item);
+                await _dbContext.SaveChangesAsync();
+
+                return Ok(item);
+            }
+
+            return NotFound();
         }
     }
 }

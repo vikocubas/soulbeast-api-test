@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SoulBeastApiTest.Data;
 
@@ -11,9 +12,11 @@ using SoulBeastApiTest.Data;
 namespace SoulBeastApiTest.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230517160652_Update SoulbeastSkill")]
+    partial class UpdateSoulbeastSkill
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -164,6 +167,10 @@ namespace SoulBeastApiTest.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SkillId");
+
+                    b.HasIndex("SoulbeastId");
+
                     b.ToTable("SoulbeastSkills");
                 });
 
@@ -187,11 +194,9 @@ namespace SoulBeastApiTest.Migrations
 
             modelBuilder.Entity("SoulBeastApiTest.Models.Skill", b =>
                 {
-                    b.HasOne("SoulBeastApiTest.Models.SoulbeastSkill", "SoulbeastSkill")
+                    b.HasOne("SoulBeastApiTest.Models.SoulbeastSkill", null)
                         .WithMany("Skills")
                         .HasForeignKey("SoulbeastSkillId");
-
-                    b.Navigation("SoulbeastSkill");
                 });
 
             modelBuilder.Entity("SoulBeastApiTest.Models.Soulbeast", b =>
@@ -203,6 +208,25 @@ namespace SoulBeastApiTest.Migrations
                         .IsRequired();
 
                     b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("SoulBeastApiTest.Models.SoulbeastSkill", b =>
+                {
+                    b.HasOne("SoulBeastApiTest.Models.Skill", "Skill")
+                        .WithMany()
+                        .HasForeignKey("SkillId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SoulBeastApiTest.Models.Soulbeast", "Soulbeast")
+                        .WithMany()
+                        .HasForeignKey("SoulbeastId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Skill");
+
+                    b.Navigation("Soulbeast");
                 });
 
             modelBuilder.Entity("SoulBeastApiTest.Models.Owner", b =>

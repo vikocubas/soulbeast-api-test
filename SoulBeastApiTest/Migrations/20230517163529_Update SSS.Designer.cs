@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SoulBeastApiTest.Data;
 
@@ -11,9 +12,11 @@ using SoulBeastApiTest.Data;
 namespace SoulBeastApiTest.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230517163529_Update SSS")]
+    partial class UpdateSSS
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -187,11 +190,9 @@ namespace SoulBeastApiTest.Migrations
 
             modelBuilder.Entity("SoulBeastApiTest.Models.Skill", b =>
                 {
-                    b.HasOne("SoulBeastApiTest.Models.SoulbeastSkill", "SoulbeastSkill")
+                    b.HasOne("SoulBeastApiTest.Models.SoulbeastSkill", null)
                         .WithMany("Skills")
                         .HasForeignKey("SoulbeastSkillId");
-
-                    b.Navigation("SoulbeastSkill");
                 });
 
             modelBuilder.Entity("SoulBeastApiTest.Models.Soulbeast", b =>

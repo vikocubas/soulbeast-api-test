@@ -7,6 +7,7 @@ namespace SoulBeastApiTest.Dto
         public Guid Id { get; set; } = Guid.NewGuid();
         public Guid SoulbeastId { get; set; }
         public Guid SkillId { get; set; }
+        public List<SkillDto>? Skills { get; set; }
 
     }
 }
