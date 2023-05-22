@@ -16,7 +16,7 @@ namespace SoulBeastApiTest.Controllers
             _dbContext = dbContext;
         }
 
-        //Método Get mostrando todos os SoulBeasts e seus Items
+        //Método Get mostrando todos os SoulBeasts, seus Items e suas skills.
         [HttpGet]
         public IActionResult GetSoulbeasts()
         {
@@ -49,12 +49,13 @@ namespace SoulBeastApiTest.Controllers
                         .OrderBy(skill => skill.Level)
                         .ToList(),
                 })
+                .OrderBy(soulbeast => soulbeast.Name)
                 .ToList();
 
             return Ok(soulbeast);
         }
 
-        //Método Get por SoulBeast Id mostrando dados e seus Items.
+        //Método Get por SoulBeast Id mostrando dados, seus Items e suas skills.
         [HttpGet]
         [Route("{id:guid}")]
         public async Task<IActionResult> GetSoulbeast([FromRoute] Guid id)
@@ -79,7 +80,18 @@ namespace SoulBeastApiTest.Controllers
                             Description = items.Description,
                             Rarity = items.Rarity,
                             SoulbeastId = items.SoulbeastId,
-                        }).ToList()
+                        })
+                        .ToList(),
+                     Skills = soulbeast.Skills
+                        .Select(skill => new SkillDto
+                        {
+                            Id = skill.Id,
+                            Name = skill.Name,
+                            Level = skill.Level,
+                            Description = skill.Description
+                        })
+                        .OrderBy(skill => skill.Level)
+                        .ToList(),
                  }).Where(s => s.Id == id).FirstOrDefault();
 
                 return Ok(soulbeastselect);
@@ -104,7 +116,7 @@ namespace SoulBeastApiTest.Controllers
             await _dbContext.SaveChangesAsync();
 
             return Ok(soulbeast);
-            
+
         }
 
         //Método Put Update um Soulbeast por id
@@ -162,7 +174,7 @@ namespace SoulBeastApiTest.Controllers
 
             return NoContent();
         }
-        
+
         [HttpDelete]
         [Route("{id:guid}/skills/{skillId:guid}")]
         public async Task<IActionResult> UnAssignSkill([FromRoute] Guid id, [FromRoute] Guid skillId)

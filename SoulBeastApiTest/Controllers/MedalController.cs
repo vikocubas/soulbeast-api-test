@@ -16,11 +16,22 @@ namespace SoulBeastApiTest.Controllers
             _dbContext = dbContext;
         }
 
-        //Método Get pegando todos os Medals
+        //Método Get pegando todos os Medals por ordem alfabetica
         [HttpGet]
         public IActionResult GetMedals()
         {
-            return Ok(_dbContext.Medals.ToList());
+            var medals = _dbContext.Medals
+                .Select(medals => new MedalDto
+                {
+                    Id = medals.Id,
+                    Name = medals.Name,
+                    Dungeon = medals.Dungeon,
+                    OwnerId = medals.OwnerId,
+                })
+                .OrderBy(medals => medals.Name)
+                .ToList();
+
+            return Ok(medals);
         }
 
         //Método Get por Id do Medal

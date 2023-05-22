@@ -20,7 +20,18 @@ namespace SoulBeastApiTest.Controllers
         [HttpGet]
         public IActionResult GetSkills()
         {
-            return Ok(_dbContext.Skills.ToList());
+            var skills = _dbContext.Skills
+                .Select(skills => new SkillDto
+                {
+                    Id = skills.Id,
+                    Name = skills.Name,
+                    Level = skills.Level,
+                    Description = skills.Description,
+                })
+                .OrderBy(skills => skills.Name)
+                .ToList();
+
+            return Ok(skills);
         }
 
         //Método Get por Id da Skill

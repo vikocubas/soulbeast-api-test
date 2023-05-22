@@ -44,11 +44,11 @@ namespace SoulBeastApiTest.Controllers
                             Name = medals.Name,
                             Dungeon = medals.Dungeon,
                             OwnerId = medals.OwnerId
-                        }).ToList(),
+                        })
+                        .ToList(),
                 })
+                .OrderBy(owner => owner.Name)
                 .ToList();
-
-
 
             return Ok(owners);
         }

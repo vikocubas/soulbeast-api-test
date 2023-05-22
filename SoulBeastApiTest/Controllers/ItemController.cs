@@ -16,11 +16,23 @@ namespace SoulBeastApiTest.Controllers
             _dbContext = dbContext;
         }
 
-        //Método Get pegando todos os Items
+        //Método Get pegando todos os Items por ordem alfabetica
         [HttpGet]
         public IActionResult GetItems()
         {
-            return Ok(_dbContext.Items.ToList());
+            var items = _dbContext.Items
+                .Select(items => new ItemDto
+                {
+                    Id = items.Id,
+                    Name = items.Name,
+                    Description = items.Description,
+                    Rarity = items.Rarity,
+                    SoulbeastId = items.SoulbeastId,
+                })
+                .OrderBy(items => items.Name)
+                .ToList();
+
+            return Ok(items);
         }
 
         //Método Get por Id do Item
