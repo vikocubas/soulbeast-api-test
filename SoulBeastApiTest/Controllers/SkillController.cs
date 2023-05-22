@@ -54,7 +54,7 @@ namespace SoulBeastApiTest.Controllers
             return Ok(skill);
         }
 
-        //Método Put Update uma Medal por id
+        //Método Put Update Skill por id
         [HttpPut]
         [Route("{id:guid}")]
         public async Task<IActionResult> UpdateSkill([FromRoute] Guid id, SkillDto skillUpdate)
@@ -66,25 +66,6 @@ namespace SoulBeastApiTest.Controllers
                 skill.Name = skillUpdate.Name;
                 skill.Level = skillUpdate.Level;
                 skill.Description = skillUpdate.Description;
-
-                await _dbContext.SaveChangesAsync();
-
-                return Ok(skill);
-            }
-
-            return NotFound();
-        }
-
-        //Método Put adicionando uma Skill a um SoulbeastSkill Id
-        [HttpPut]
-        [Route("{id:guid}/putSkill")]
-        public async Task<IActionResult> PutMedal([FromRoute] Guid id, SkillDto putSkill)
-        {
-            var skill = await _dbContext.Skills.FindAsync(id);
-
-            if (skill != null)
-            {
-                skill.SoulbeastSkillId = putSkill.SoulbeastSkillId;
 
                 await _dbContext.SaveChangesAsync();
 

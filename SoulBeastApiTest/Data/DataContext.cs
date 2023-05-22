@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SoulBeastApiTest.Models;
+using System.Diagnostics;
+using System.Security;
 
 namespace SoulBeastApiTest.Data
 {
@@ -18,5 +20,12 @@ namespace SoulBeastApiTest.Data
         public DbSet<Skill> Skills { get; set; }
         public DbSet<SoulbeastSkill> SoulbeastSkills { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Soulbeast>()
+                .HasMany(soulbeast => soulbeast.Skills)
+                .WithMany(skilll => skilll.Soulbeasts)
+                .UsingEntity<SoulbeastSkill>();
+        }
     }
 }

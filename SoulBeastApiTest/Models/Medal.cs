@@ -10,6 +10,6 @@ namespace SoulBeastApiTest.Models
 
         // Relação que 1 Medal por ter somente 1 OwnerId porém não é obrigatório
         public Guid? OwnerId { get; set; }
-        public Owner? Owner { get; set; }
+        public Owner Owner { get; set; }
     }
 }

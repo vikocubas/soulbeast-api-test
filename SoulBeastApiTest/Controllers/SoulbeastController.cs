@@ -6,7 +6,7 @@ using SoulBeastApiTest.Models;
 namespace SoulBeastApiTest.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/soulbeasts")]
     public class SoulbeastController : Controller
     {
         private readonly DataContext _dbContext;
@@ -28,19 +28,27 @@ namespace SoulBeastApiTest.Controllers
                     Level = soulbeast.Level,
                     Element = soulbeast.Element,
                     OwnerId = soulbeast.OwnerId,
-                    Items = soulbeast.Items.
-                        Select(items => new ItemDto
+                    Items = soulbeast.Items
+                        .Select(items => new ItemDto
                         {
                             Id = items.Id,
                             Name = items.Name,
                             Description = items.Description,
                             Rarity = items.Rarity,
                             SoulbeastId = items.SoulbeastId,
-                        }).ToList()
+                        })
+                        .ToList(),
+                    Skills = soulbeast.Skills
+                        .Select(skill => new SkillDto
+                        {
+                            Id = skill.Id,
+                            Name = skill.Name,
+                            Level = skill.Level,
+                            Description = skill.Description
+                        })
+                        .ToList(),
                 })
                 .ToList();
-
-
 
             return Ok(soulbeast);
         }
@@ -136,6 +144,38 @@ namespace SoulBeastApiTest.Controllers
             }
 
             return NotFound();
+        }
+
+        [HttpPost]
+        [Route("{id:guid}/skills/{skillId:guid}")]
+        public async Task<IActionResult> AssignSkill([FromRoute] Guid id, [FromRoute] Guid skillId)
+        {
+            var soulbeastskill = new SoulbeastSkill()
+            {
+                SoulbeastId = id,
+                SkillId = skillId,
+            };
+
+            await _dbContext.SoulbeastSkills.AddAsync(soulbeastskill);
+            await _dbContext.SaveChangesAsync();
+
+            return NoContent();
+        }
+        
+        [HttpDelete]
+        [Route("{id:guid}/skills/{skillId:guid}")]
+        public async Task<IActionResult> UnAssignSkill([FromRoute] Guid id, [FromRoute] Guid skillId)
+        {
+            var soulbeastskill = new SoulbeastSkill()
+            {
+                SoulbeastId = id,
+                SkillId = skillId,
+            };
+
+            _dbContext.SoulbeastSkills.Remove(soulbeastskill);
+            await _dbContext.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }

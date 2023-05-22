@@ -8,8 +8,7 @@ namespace SoulBeastApiTest.Models
         public string Name { get; set; }
         public int Level { get; set; }
         public string Description { get; set; }
-        public Guid? SoulbeastSkillId { get; set; }
-        public SoulbeastSkill SoulbeastSkill { get; set; }
+        public List<Soulbeast> Soulbeasts { get; set; } = new();
 
     }
 }

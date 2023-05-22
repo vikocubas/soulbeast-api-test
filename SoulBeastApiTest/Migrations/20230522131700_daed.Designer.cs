@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SoulBeastApiTest.Data;
 
@@ -11,9 +12,11 @@ using SoulBeastApiTest.Data;
 namespace SoulBeastApiTest.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230522131700_daed")]
+    partial class daed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,12 +32,15 @@ namespace SoulBeastApiTest.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Rarity")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("SoulbeastId")
@@ -54,9 +60,11 @@ namespace SoulBeastApiTest.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Dungeon")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("OwnerId")
@@ -79,9 +87,11 @@ namespace SoulBeastApiTest.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("HomeTown")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -96,12 +106,14 @@ namespace SoulBeastApiTest.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Level")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -116,12 +128,14 @@ namespace SoulBeastApiTest.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Element")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Level")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("OwnerId")
@@ -136,15 +150,19 @@ namespace SoulBeastApiTest.Migrations
 
             modelBuilder.Entity("SoulBeastApiTest.Models.SoulbeastSkill", b =>
                 {
-                    b.Property<Guid>("SkillId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("SkillId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("SoulbeastId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("SkillId", "SoulbeastId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("SoulbeastId");
+                    b.HasIndex("SkillId");
 
                     b.ToTable("SoulbeastSkills");
                 });
@@ -181,20 +199,10 @@ namespace SoulBeastApiTest.Migrations
             modelBuilder.Entity("SoulBeastApiTest.Models.SoulbeastSkill", b =>
                 {
                     b.HasOne("SoulBeastApiTest.Models.Skill", "Skills")
-                        .WithMany()
-                        .HasForeignKey("SkillId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SoulBeastApiTest.Models.Soulbeast", "Soulbeasts")
-                        .WithMany()
-                        .HasForeignKey("SoulbeastId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("SoulbeastSkills")
+                        .HasForeignKey("SkillId");
 
                     b.Navigation("Skills");
-
-                    b.Navigation("Soulbeasts");
                 });
 
             modelBuilder.Entity("SoulBeastApiTest.Models.Owner", b =>
@@ -202,6 +210,11 @@ namespace SoulBeastApiTest.Migrations
                     b.Navigation("Medals");
 
                     b.Navigation("Soulbeasts");
+                });
+
+            modelBuilder.Entity("SoulBeastApiTest.Models.Skill", b =>
+                {
+                    b.Navigation("SoulbeastSkills");
                 });
 
             modelBuilder.Entity("SoulBeastApiTest.Models.Soulbeast", b =>

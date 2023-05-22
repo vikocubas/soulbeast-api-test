@@ -1,13 +1,10 @@
-﻿using SoulBeastApiTest.Models;
-
-namespace SoulBeastApiTest.Dto
+﻿namespace SoulBeastApiTest.Dto
 {
     public class SkillDto
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public int Level { get; set; }
         public string Description { get; set; }
-        public Guid? SoulbeastSkillId { get; set; }
     }
 }
