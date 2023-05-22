@@ -24,7 +24,7 @@ namespace SoulBeastApiTest.Data
         {
             modelBuilder.Entity<Soulbeast>()
                 .HasMany(soulbeast => soulbeast.Skills)
-                .WithMany(skilll => skilll.Soulbeasts)
+                .WithMany(skill => skill.Soulbeasts)
                 .UsingEntity<SoulbeastSkill>();
         }
     }

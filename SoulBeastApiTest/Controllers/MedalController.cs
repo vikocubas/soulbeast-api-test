@@ -73,26 +73,6 @@ namespace SoulBeastApiTest.Controllers
             return NotFound();
         }
 
-        //Método Put adicionando uma Medalha a um Owner Id
-        [HttpPut]
-        [Route("{id:guid}/putMedal")]
-        public async Task<IActionResult> PutMedal([FromRoute] Guid id, MedalDto putMedal)
-        {
-            var medal = await _dbContext.Medals.FindAsync(id);
-
-            if (medal != null)
-            {
-                medal.OwnerId = putMedal.OwnerId;
-
-                await _dbContext.SaveChangesAsync();
-
-                return Ok(medal);
-            }
-
-            return NotFound();
-        }
-
-
         //Método Delete para deletar Medal por Id
         [HttpDelete]
         [Route("{id:guid}")]
@@ -103,6 +83,25 @@ namespace SoulBeastApiTest.Controllers
             if (medal != null)
             {
                 _dbContext.Remove(medal);
+                await _dbContext.SaveChangesAsync();
+
+                return Ok(medal);
+            }
+
+            return NotFound();
+        }
+
+        //Método Post adicionando uma Medalha a um Owner Id
+        [HttpPost]
+        [Route("{id:guid}/assign-medal")]
+        public async Task<IActionResult> PutMedal([FromRoute] Guid id, MedalDto assignMedal)
+        {
+            var medal = await _dbContext.Medals.FindAsync(id);
+
+            if (medal != null)
+            {
+                medal.OwnerId = assignMedal.OwnerId;
+
                 await _dbContext.SaveChangesAsync();
 
                 return Ok(medal);

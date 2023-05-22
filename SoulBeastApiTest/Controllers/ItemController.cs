@@ -75,26 +75,6 @@ namespace SoulBeastApiTest.Controllers
             return NotFound();
         }
 
-        //Método Put adicionando um Item a um Soulbeast Id
-        [HttpPut]
-        [Route("{id:guid}/putItem")]
-        public async Task<IActionResult> PutItem([FromRoute] Guid id, ItemDto putItem)
-        {
-            var item = await _dbContext.Items.FindAsync(id);
-
-            if (item != null)
-            {
-                item.SoulbeastId = putItem.SoulbeastId;
-
-                await _dbContext.SaveChangesAsync();
-
-                return Ok(item);
-            }
-
-            return NotFound();
-        }
-
-
         //Método Delete para deletar Item por Id
         [HttpDelete]
         [Route("{id:guid}")]
@@ -105,6 +85,25 @@ namespace SoulBeastApiTest.Controllers
             if (item != null)
             {
                 _dbContext.Remove(item);
+                await _dbContext.SaveChangesAsync();
+
+                return Ok(item);
+            }
+
+            return NotFound();
+        }
+
+        //Método Post adicionando um Item a um Soulbeast Id
+        [HttpPost]
+        [Route("{id:guid}/assign-item")]
+        public async Task<IActionResult> PutItem([FromRoute] Guid id, ItemDto assignItem)
+        {
+            var item = await _dbContext.Items.FindAsync(id);
+
+            if (item != null)
+            {
+                item.SoulbeastId = assignItem.SoulbeastId;
+
                 await _dbContext.SaveChangesAsync();
 
                 return Ok(item);
