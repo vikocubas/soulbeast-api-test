@@ -46,6 +46,7 @@ namespace SoulBeastApiTest.Controllers
                             Level = skill.Level,
                             Description = skill.Description
                         })
+                        .OrderBy(skill => skill.Level)
                         .ToList(),
                 })
                 .ToList();
